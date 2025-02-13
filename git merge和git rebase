@@ -1,0 +1,39 @@
+git merge和 git rebase都是为了合并一个分支的代码到另一个分支。
+merge和rebase的影响主要在master分支，通过merge合并，master会记录来自各个feature分支的记录，而通过先rebase再merge的方式，master分支只是将代码按照提交时间线合并，并不会记录复杂的分支合并关系。
+例如有两个分支master，feature，master上有两个commit1，commit2. feature是基于master分支拉出新的分支，自然也有commit1，commit2两个记录。现在在feature分支提交了代码commit3.
+
+1、初始化状态
+此时master分支的状态是：
+1 ---> 2   master
+feature 分支状态是：
+1----->2----->3
+
+
+2、merge操作
+merge是在master分支操作，拉取feature的提交记录。
+git checkout master
+git merge feature
+拉取完后的分支状态，指针在E上。
+            3  feature
+         /     \
+1---2---4       master
+feature 分支状态是：
+1----->2----->3  
+
+3、rebase操作
+rebase是在feature分支操作，将feature分支后面提交的代码复制到master分支。然后再在master上进行merge。
+git checkout feature
+git rebase master
+执行完rebase后两个分支的commit log并不会变化。
+此时master分支的状态是：
+1 ---> 2   master
+feature 分支状态是：
+1----->2----->3
+
+切到master分支再次执行merge
+git checkout master
+git merge feature
+拉取完后的分支状态。
+1----->2----->3   master
+feature 分支状态是：
+1----->2----->3  feature

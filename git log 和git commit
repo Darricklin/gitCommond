@@ -1,0 +1,24 @@
+1. 查看分支merge记录
+git log --merges
+2. 查看分支merge树状结构
+git log --graph --oneline --decorate --all
+
+3.修改commit message
+3.1 如果修改的是最后一个commit的message
+git commit --amend -m "新的提交信息"
+3.2 如果修改的不是最后一个commit的message
+例如commit 记录如下，要修改commit efgh的message 为20
+commit abcd  message 1
+commit efgh  message 2
+commit hijk  message 3
+第一步交互式变基，找到要修改的commit记录的前一个记录。
+git rebase -i hijk
+第二步找到你要修改 message 的提交，将其前面的 pick 改为 reword（可以简写成 r），然后保存并退出编辑器。这里是把efgh的commit前的pick 修改为了reword
+修改前
+pick abcd  message 1
+pick efgh  message 2
+修改后
+pick abcd  message 1
+reword efgh  message 2
+第三步当处理到标记为 reword 的提交时，会再次弹出编辑器，让你修改该提交的 message。修改完成后保存并退出编辑器。
+commit efgh  message 2  ----> commit efgh  message 20
